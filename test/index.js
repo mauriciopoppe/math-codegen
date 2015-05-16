@@ -131,6 +131,12 @@ describe('math-codegen', function () {
           [id('sin', 'ns.factory(1)'), '( scope["x"] = ns.factory(1) )']
         );
       });
+
+      it('should throw on expressions not implemented', function () {
+        assert.throws(function () {
+          cg.parse('var y = 1');
+        });
+      });
     });
 
     describe('with raw set to true', function () {
