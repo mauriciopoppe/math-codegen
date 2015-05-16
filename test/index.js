@@ -68,6 +68,9 @@ describe('math-codegen', function () {
         statement(cg.parse('-1'), [id('negative', 'ns.factory(1)')]);
         statement(cg.parse('+1'), [id('positive', 'ns.factory(1)')]);
         statement(cg.parse('-+1'), [id('negative', id('positive', 'ns.factory(1)'))]);
+        assert.throws(function () {
+          cg.parse('void 1');
+        });
       });
 
       it('should parse an array', function () {
@@ -117,6 +120,9 @@ describe('math-codegen', function () {
 
       it('should parse an assignment expression', function () {
         statement(cg.parse('x = 1'), ['( scope["x"] = ns.factory(1) )']);
+        assert.throws(function () {
+          cg.parse('x += 1');
+        });
       });
 
       it('should parse multiple statements', function () {
