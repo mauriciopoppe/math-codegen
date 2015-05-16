@@ -32,7 +32,7 @@ Coming soon...
 [npm-url]: https://npmjs.org/package/math-codegen
 [travis-image]: https://travis-ci.org/maurizzzio/math-codegen.svg?branch=master
 [travis-url]: https://travis-ci.org/maurizzzio/math-codegen
-[coveralls-image]: https://coveralls.io/repos/maurizzzio/math-codegen/badge.svg
-[coveralls-url]: https://coveralls.io/r/maurizzzio/math-codegen
+[coveralls-image]: https://coveralls.io/repos/maurizzzio/math-codegen/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/r/maurizzzio/math-codegen?branch=master
 [david-image]: https://david-dm.org/maurizzzio/math-codegen.svg
 [david-url]: https://david-dm.org/maurizzzio/math-codegen
