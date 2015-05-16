@@ -20,9 +20,11 @@ function statement(instance, test) {
 
 function id(name) {
   var args = Array.prototype.slice.call(arguments, 1);
+  /* eslint-disable new-cap */
   var identifier = Identifier({
     name: name
   });
+  /* eslint-enable new-cap */
   if (args.length) {
     identifier += '(' + args.join(',') + ')';
   }
