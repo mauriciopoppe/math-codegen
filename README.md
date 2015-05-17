@@ -103,18 +103,14 @@ The object returned above can be evaluated within a context
 parse('1 + 2 * x').compile(namespace).eval(scope)
 ```
 
-### Examples
-
-TODO:
-
-### Differences with math.js' expression parser
+### Differences with math.js expression parser
 
 Math.js expression parser API is quite similar having the same lifecycle however there are some
 important facts I've found:
 
 - `math.js` has a custom expression parser, `math-codegen` uses Esprima which support the ES5 grammar
 [(ESTree AST nodes)](https://github.com/estree/estree/blob/master/spec.md)
-- `math.js` v1.x arrays can represent matrices with `ns.matrix` or as a raw array, `math-codegen` doesn't
+- `math.js` v1.x arrays can represent matrices with `ns.matrix` or as a raw arrays, `math-codegen` doesn't
 make any assumptions of arrays and treats them just like any other constant allowing the namespace to 
 decide what to do with an array in its factory
 
@@ -165,10 +161,22 @@ Node types implemented:
 - Expressions:
   - [ArrayExpression](https://github.com/estree/estree/blob/master/spec.md#arrayexpression)
   - [UnaryExpression](https://github.com/estree/estree/blob/master/spec.md#unaryexpression)
+  available operators emulated with function calls can be found 
+  [here](https://github.com/maurizzzio/math-codegen/blob/master/lib/misc/UnaryOperator.js)
   - [BinaryExpression](https://github.com/estree/estree/blob/master/spec.md#binaryexpression)
+  available operators emulated with function calls can be found 
+  [here](https://github.com/maurizzzio/math-codegen/blob/master/lib/misc/BinaryOperator.js)  
   - [AssignmentExpression](https://github.com/estree/estree/blob/master/spec.md#assignmentexpression)
   - [ConditionalExpression](https://github.com/estree/estree/blob/master/spec.md#conditionalexpression)
   - [CallExpression](https://github.com/estree/estree/blob/master/spec.md#callexpression)
+- Misc:
+  - [Identifiers](https://github.com/estree/estree/blob/master/spec.md#identifier), identifier
+  resolution follows this order:
+    - namespace
+    - scope
+    - definitions
+   
+  - [Literals](https://github.com/estree/estree/blob/master/spec.md#literal)
   
 ### `instance.compile(namespace)`
   
@@ -182,6 +190,15 @@ Compiles the code making `namespace`'s properties available during evaluation
 * `return.eval` {Function} Function to be evaluated under a context
  **params**
   * `scope` {Object}
+
+### `instance.setDefs(defs)`
+
+**params**
+* `defs` {Object}
+
+An object whose properties will be available during evaluation, properties can be accessed by
+the property name in the program
+
 
 ## Inspiration projects
 

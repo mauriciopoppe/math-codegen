@@ -253,9 +253,8 @@ describe('math-codegen', function () {
     });
 
     it('should throw when there are no statements', function () {
-      cg.parse('');
       assert.throws(function () {
-        cg.compile();
+        cg.compile({});
       });
     });
 
@@ -269,6 +268,14 @@ describe('math-codegen', function () {
       assert.throws(function () {
         code.eval();
       });
+    });
+
+    it('should compile addition if .add is in the namespace', function () {
+      var code = cg.parse('1 + 2').compile({
+        factory: function (n) { return n; },
+        add: function (x, y) { return x + y; }
+      });
+      assert(code.eval() === 3);
     });
   });
 });
