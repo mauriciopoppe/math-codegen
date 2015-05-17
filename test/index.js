@@ -12,7 +12,7 @@ function cleanAssert(a, b) {
 
 function statement(instance, test) {
   var statements = instance.statements;
-  //console.log(statements, test);
+  console.log(statements, test);
   for (var i = 0; i < statements.length; i += 1) {
     cleanAssert(statements[i], test[i]);
   }
@@ -104,12 +104,6 @@ describe('math-codegen', function () {
         );
       });
 
-      it('should throw on a not implemented binary operator', function () {
-        assert.throws(function () {
-          cg.parse('1 & 2');
-        });
-      });
-
       it('should parse a conditional expression', function () {
         statement(
           cg.parse('1 < 2 ? 1 : 2'),
@@ -120,9 +114,7 @@ describe('math-codegen', function () {
 
       it('should parse an assignment expression', function () {
         statement(cg.parse('x = 1'), ['( scope["x"] = ns.factory(1) )']);
-        assert.throws(function () {
-          cg.parse('x += 1');
-        });
+        statement(cg.parse('x += 1'), ['( scope["x"] = ' + id('add', id('x'), 'ns.factory(1)') + ')']);
       });
 
       it('should parse multiple statements', function () {
@@ -202,6 +194,7 @@ describe('math-codegen', function () {
 
       it('should parse an assignment expression', function () {
         statement(cg.parse('x = 1'), ['( scope["x"] = 1 )']);
+        statement(cg.parse('x += 1'), ['( scope["x"] = (' + id('x') + ' + 1 ))']);
       });
 
       it('should parse multiple statements', function () {
