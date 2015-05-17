@@ -256,6 +256,13 @@ describe('math-codegen', function () {
       assert(code.eval.toString().indexOf('return ') > 0);
     });
 
+    it('should compile correctly under a ns', function () {
+      cg.parse('1 + 2').compile({});
+      cg.parse('x = 1').compile({});
+      cg.parse('x = 1; y += 1').compile({});
+      cg.parse('x = 1; y + 1').compile({});
+    });
+
     it('should throw if a method is not defined in the scope or in the ns', function () {
       var code = cg.parse('1 + 2').compile({});
       assert.throws(function () {
