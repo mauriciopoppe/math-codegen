@@ -46,13 +46,13 @@ in addition an expression can be evaluated under any adapted namespace providing
 
 #### Parse
 
-For example let's consider the following expression with the variables `a`, `b` and `c` which are user defined:
+For example let's consider the following expression with the variable `x` which is user defined:
 
 ```javascript
 '1 + 2 * x'
 ```
 
-which can be emulated with function calls instead of operators (the parser identifies the operators as 
+The expression can be emulated with function calls instead of operators (the parser identifies operators as 
 [Binary Expressions](https://github.com/estree/estree/blob/master/spec.md#binaryexpression))
 
 ```javascript
@@ -115,8 +115,8 @@ important facts I've found:
 - `math.js` has a custom expression parser, `math-codegen` uses Esprima which support the ES5 grammar
 [(ESTree AST nodes)](https://github.com/estree/estree/blob/master/spec.md)
 - `math.js` v1.x arrays can represent matrices with `ns.matrix` or as a raw arrays, `math-codegen` doesn't
-make any assumptions of arrays and treats them just like any other constant allowing the namespace to 
-decide what to do with an array in its factory
+make any assumptions of arrays and treats them just like any other literal allowing the namespace to 
+decide what to do with an array in its `factory` method
 
 ## Install
 
