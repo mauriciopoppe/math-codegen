@@ -15,14 +15,18 @@
     - [Parse](#parse)
     - [Compile](#compile)
     - [Eval](#eval)
-  - [Examples](#examples)
-  - [Differences with math.js' expression parser](#differences-with-mathjs-expression-parser)
+  - [Differences with math.js expression parser](#differences-with-mathjs-expression-parser)
 - [Install](#install)
 - [Usage](#usage)
 - [API](#api)
   - [`var instance = new CodeGenerator([options])`](#var-instance--new-codegeneratoroptions)
   - [`instance.parse(code)`](#instanceparsecode)
   - [`instance.compile(namespace)`](#instancecompilenamespace)
+  - [`instance.setDefs(defs)`](#instancesetdefsdefs)
+- [Examples](#examples)
+  - [Native math](#native-math)
+  - [imaginary](#imaginary)
+  - [interval arithmetic](#interval-arithmetic)
 - [Inspiration projects](#inspiration-projects)
 - [License](#license)
 
@@ -174,7 +178,7 @@ Node types implemented:
   resolution follows this order:
     - namespace
     - scope
-    - definitions
+    - definitions stored in `instance.defs`
    
   - [Literals](https://github.com/estree/estree/blob/master/spec.md#literal)
   
@@ -199,6 +203,89 @@ Compiles the code making `namespace`'s properties available during evaluation
 An object whose properties will be available during evaluation, properties can be accessed by
 the property name in the program
 
+## Examples
+
+### Native math
+
+```javascript
+var numeric = {
+  factory: function (a) { return a; },
+  add: function (a, b) { return a + b; },
+  mul: function (a, b) { return a * b; }
+};
+
+var instance = new CodeGenerator()
+  .parse('1 + 2 * x')
+  .compile(numeric);
+
+console.log(instance.eval({x : 3}));     // 1 + 2 * 3 = 7
+```
+
+### imaginary
+
+```javascript
+var imaginary = {
+  factory: function (a) {
+    // a = [re, im]
+    if (typeof a === 'number') {
+      return [a, 0];
+    }
+    return [a[0] || 0, a[1] || 0];
+  },
+  add: function (a, b) {
+    var re = a[0] + b[0];
+    var im = a[1] + b[1];
+    return [re, im];
+  },
+  mul: function (a, b) {
+    var re = a[0] * b[0] - a[1] * b[1];
+    var im = a[0] * b[1] + a[1] * b[0];
+    return [re, im];
+  }
+};
+
+var instance = new CodeGenerator()
+  .parse('1 + 2 * x')
+  .compile(imaginary);
+
+// [1, 0] + [2, 0] * [1, 1]
+// [1, 0] + [2, 2]
+// [3, 2]
+console.log(instance.eval({x : [1, 1]}));
+```
+
+### interval arithmetic
+
+```javascript
+var interval = {
+  factory: function (a) {
+    // a = [lo, hi]
+    if (typeof a === 'number') {
+      return [a, a];
+    }
+    return [a[0], a[1]];
+  },
+  add: function (x, y) {
+    return [x[0] + y[0], x[1] + y[1]];
+  },
+  mul: function (x, y) {
+    var ac = x[0] * y[0];
+    var ad = x[0] * y[1];
+    var bc = x[1] * y[0];
+    var bd = x[1] * y[1];
+    return [Math.min(ac, ad, bc, bd), Math.max(ac, ad, bc, bd)];
+  }
+};
+
+var instance = new CodeGenerator()
+  .parse('1 + 2 * x')
+  .compile(interval);
+
+// [1, 1] + [2, 2] * [-1, 2]
+// [1, 1] + [-2, 4]
+// [-1, 5]
+console.log(instance.eval({x : [-1, 2]}));
+```
 
 ## Inspiration projects
 
