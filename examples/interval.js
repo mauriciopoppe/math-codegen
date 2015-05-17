@@ -21,11 +21,14 @@ var interval = {
   }
 };
 
-var instance = new CodeGenerator()
-  .parse('1 + 2 * x')
-  .compile(interval);
+var instance = new CodeGenerator();
 
 // [1, 1] + [2, 2] * [-1, 2]
 // [1, 1] + [-2, 4]
 // [-1, 5]
-console.log(instance.eval({x : [-1, 2]}));
+console.log(
+  instance
+    .parse('1 + 2 * x')
+    .compile(interval)
+    .eval({x : [-1, 2]})
+);

@@ -52,8 +52,8 @@ For example let's consider the following expression with the variable `x` which 
 '1 + 2 * x'
 ```
 
-The expression can be emulated with function calls instead of operators (the parser identifies operators as 
-[Binary Expressions](https://github.com/estree/estree/blob/master/spec.md#binaryexpression))
+the expression can be emulated with function calls instead of operators (the parser identifies the addition and multiplication
+expression as [Binary Expressions](https://github.com/estree/estree/blob/master/spec.md#binaryexpression))
 
 ```javascript
 'add(1, multiply(2, x))'
@@ -112,10 +112,11 @@ parse('1 + 2 * x').compile(namespace).eval(scope)
 Math.js expression parser API is quite similar having the same lifecycle however there are some
 important facts I've found:
 
-- `math.js` has a custom expression parser, `math-codegen` uses Esprima which support the ES5 grammar
+- `math.js` has a custom expression parser (which means it has additional types of nodes),
+`math-codegen` uses Esprima which support the ES5 grammar only
 [(ESTree AST nodes)](https://github.com/estree/estree/blob/master/spec.md)
 - `math.js` v1.x arrays can represent matrices with `ns.matrix` or as a raw arrays, `math-codegen` doesn't
-make any assumptions of arrays and treats them just like any other literal allowing the namespace to 
+make any assumptions of the arrays and treats them just like any other literal allowing the namespace to 
 decide what to do with an array in its `factory` method
 
 ## Install
@@ -144,7 +145,8 @@ that exist during the instance lifespan
 * `options` {Object} Options available for the interpreter
   * `[options.factory="ns.factory"]` {string} factory method under the namespace 
   * `[options.raw=false]` {boolean} True to interpret BinaryExpression, UnaryExpression and ArrayExpression
-   in a raw way without wrapping the operators with the factory method
+   in a raw way without wrapping the operators with identifiers, e.g. `-1` will be compiled as
+   `-1` instead of `ns.negative(ns.factory(1))`
   * `[options.rawArrayExpressionElements=true]` {boolean} true to interpret the array elements in a raw way
   * `[options.rawCallExpressionElements=false]` {boolean} true to interpret call expression
    elements in a raw way
@@ -205,25 +207,34 @@ the property name in the program
 
 ## Examples
 
-### Native math
+### built-in math
 
 ```javascript
 var numeric = {
-  factory: function (a) { return a; },
-  add: function (a, b) { return a + b; },
-  mul: function (a, b) { return a * b; }
+  factory: function (a) {
+    // anything is a number :)
+    return Number(a); 
+  },
+  add: function (a, b) { 
+    return a + b; 
+  },
+  mul: function (a, b) { 
+    return a * b; 
+  }
 };
 
 var instance = new CodeGenerator()
   .parse('1 + 2 * x')
   .compile(numeric);
 
-console.log(instance.eval({x : 3}));     // 1 + 2 * 3 = 7
+instance.eval({x : 3});     // 1 + 2 * 3 = 7
 ```
 
 ### imaginary
 
 ```javascript
+var instance = new CodeGenerator();
+
 var imaginary = {
   factory: function (a) {
     // a = [re, im]
@@ -244,14 +255,22 @@ var imaginary = {
   }
 };
 
-var instance = new CodeGenerator()
-  .parse('1 + 2 * x')
-  .compile(imaginary);
-
 // [1, 0] + [2, 0] * [1, 1]
 // [1, 0] + [2, 2]
 // [3, 2]
-console.log(instance.eval({x : [1, 1]}));
+instance
+  .parse('1 + 2 * x')
+  .compile(imaginary)
+  .eval({x : [1, 1]})
+
+// because of the way the factory works it can also receive an array as a parameter
+// [1, 0] + [2, 0] * [1, 1]
+// [1, 0] + [2, 2]
+// [3, 2]
+instance
+  .parse('[1, 0] + [2, 0] * x')
+  .compile(imaginary)
+  .eval({x : [1, 1]});
 ```
 
 ### interval arithmetic
@@ -263,7 +282,7 @@ var interval = {
     if (typeof a === 'number') {
       return [a, a];
     }
-    return [a[0], a[1]];
+    return a;
   },
   add: function (x, y) {
     return [x[0] + y[0], x[1] + y[1]];
@@ -277,14 +296,13 @@ var interval = {
   }
 };
 
-var instance = new CodeGenerator()
-  .parse('1 + 2 * x')
-  .compile(interval);
-
 // [1, 1] + [2, 2] * [-1, 2]
 // [1, 1] + [-2, 4]
 // [-1, 5]
-console.log(instance.eval({x : [-1, 2]}));
+var instance = new CodeGenerator()
+  .parse('1 + 2 * x')
+  .compile(interval)
+  .eval({x : [-1, 2]});
 ```
 
 ## Inspiration projects

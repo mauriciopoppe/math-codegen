@@ -21,11 +21,15 @@ var imaginary = {
   }
 };
 
-var instance = new CodeGenerator()
-  .parse('1 + 2 * x')
-  .compile(imaginary);
+var instance = new CodeGenerator();
+
 
 // [1, 0] + [2, 0] * [1, 1]
 // [1, 0] + [2, 2]
 // [3, 2]
-console.log(instance.eval({x : [1, 1]}));
+console.log(
+  instance
+    .parse('1 + 2 * x')
+    .compile(imaginary)
+    .eval({x : [1, 1]})
+);

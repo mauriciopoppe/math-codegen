@@ -7,8 +7,10 @@ var numeric = {
   mul: function (a, b) { return a * b; }
 };
 
-var instance = new CodeGenerator()
-  .parse('1 + 2 * x')
-  .compile(numeric);
-
-console.log(instance.eval({x : 3}));     // 1 + 2 * 3 = 7
+// 1 + 2 * 3 = 7
+console.log(
+  new CodeGenerator()
+    .parse('1 + 2 * x')
+    .compile(numeric)
+    .eval({x : 3})
+);
