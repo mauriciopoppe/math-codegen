@@ -1,6 +1,6 @@
 {
   "name": "math-codegen",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Generates code from mathematical expressions",
   "bugs": "https://github.com/maurizzzio/math-codegen/issues",
   "license": "MIT",
