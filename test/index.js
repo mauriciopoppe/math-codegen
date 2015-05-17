@@ -12,7 +12,7 @@ function cleanAssert(a, b) {
 
 function statement(instance, test) {
   var statements = instance.statements;
-  console.log(statements, test);
+  //console.log(statements, test);
   for (var i = 0; i < statements.length; i += 1) {
     cleanAssert(statements[i], test[i]);
   }
