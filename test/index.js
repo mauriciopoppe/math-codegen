@@ -242,7 +242,7 @@ describe('math-codegen', function () {
 
   describe('compile', function () {
     beforeEach(function () {
-      cg = new CodeGenerator().setDefs({ns: {}});
+      cg = new CodeGenerator();
     });
 
     it('should throw when ns is not defined', function () {
@@ -259,13 +259,13 @@ describe('math-codegen', function () {
       });
     });
 
-    it('should return an eval method', function () {
-      var code = cg.parse('1 + 2').compile();
+    it('should have a return statement in the eval method', function () {
+      var code = cg.parse('1 + 2').compile({});
       assert(code.eval.toString().indexOf('return ') > 0);
     });
 
     it('should throw if a method is not defined in the scope or in the ns', function () {
-      var code = cg.parse('1 + 2').compile();
+      var code = cg.parse('1 + 2').compile({});
       assert.throws(function () {
         code.eval();
       });
