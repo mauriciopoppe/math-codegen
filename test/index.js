@@ -96,6 +96,7 @@ describe('math-codegen', function () {
         statement(cg.parse('1 * 2'), [id('mul', 'ns.factory(1)', 'ns.factory(2)')]);
         statement(cg.parse('1 / 2'), [id('div', 'ns.factory(1)', 'ns.factory(2)')]);
         statement(cg.parse('1 ^ 2'), [id('pow', 'ns.factory(1)', 'ns.factory(2)')]);
+        statement(cg.parse('1 + 3 ^ 2'), [id('add', 'ns.factory(1)', id('pow', 'ns.factory(3)', 'ns.factory(2)'))]);
         statement(cg.parse('1 % 2'), [id('mod', 'ns.factory(1)', 'ns.factory(2)')]);
         statement(cg.parse('1 < 2'), [id('lessThan', 'ns.factory(1)', 'ns.factory(2)')]);
         statement(

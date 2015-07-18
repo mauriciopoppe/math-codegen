@@ -25,11 +25,11 @@
   ],
   "dependencies": {
     "esprima": "^2.2.0",
-    "extend": "^2.0.1"
+    "extend": "^3.0.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.2",
-    "doctoc": "^0.13.0",
+    "doctoc": "^0.14.2",
     "eslint": "^0.21.0",
     "istanbul": "^0.3.8",
     "mocha": "^2.2.1",

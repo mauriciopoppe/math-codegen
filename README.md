@@ -2,7 +2,10 @@
 
 [![NPM][npm-image]][npm-url]
 
-[![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url]  [![Dependency Status][david-image]][david-url]
+[![Build Status][travis-image]][travis-url] 
+[![Coverage Status][coveralls-image]][coveralls-url]
+[![Dependency Status][david-image]][david-url] 
+[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
 
 > Generates JavaScript code from mathematical expressions
 
@@ -24,7 +27,7 @@
   - [`instance.compile(namespace)`](#instancecompilenamespace)
   - [`instance.setDefs(defs)`](#instancesetdefsdefs)
 - [Examples](#examples)
-  - [Native math](#native-math)
+  - [built-in math](#built-in-math)
   - [imaginary](#imaginary)
   - [interval arithmetic](#interval-arithmetic)
 - [Inspiration projects](#inspiration-projects)
@@ -37,6 +40,8 @@
 A flexible interpreter for mathematical expressions which allows the programmer to change the usual semantic of an
 operator bringing the operator overloading polymorphism to JavaScript (emulated with function calls),
 in addition an expression can be evaluated under any adapted namespace providing expression portability between numeric libraries 
+
+NOTE: still a work on progress
 
 ### Lifecycle
 
