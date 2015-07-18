@@ -5,7 +5,7 @@
 [![Build Status][travis-image]][travis-url] 
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![Dependency Status][david-image]][david-url] 
-[![unstable](http://badges.github.io/stability-badges/dist/unstable.svg)](http://github.com/badges/stability-badges)
+[![Stability](https://img.shields.io/badge/stability-unstable-green.svg)]()
 
 > Generates JavaScript code from mathematical expressions
 
