@@ -248,10 +248,23 @@ describe('math-codegen', function () {
       cg = new CodeGenerator()
     })
 
-    it('should throw when ns is not defined', function () {
+    it('should throw when ns is not defined or it\'s different from an object/function', function () {
+      cg = new CodeGenerator()
       assert.throws(function () {
-        cg = new CodeGenerator()
         cg.parse('1 + 2').compile()
+      })
+      assert.throws(function () {
+        cg.parse('1 + 2').compile(1)
+      })
+    })
+
+    it('should compile successfully when the namespace is a object/function', function () {
+      var fn = function () { }
+      fn.factory = function (a) { return a }
+      fn.add = function (a, b) { return a + b }
+      assert.doesNotThrow(function () {
+        cg.parse('1 + x').compile(ns)
+        cg.parse('1 + x').compile(fn)
       })
     })
 
@@ -267,10 +280,12 @@ describe('math-codegen', function () {
     })
 
     it('should compile correctly under a ns', function () {
-      cg.parse('1 + 2').compile(ns)
-      cg.parse('x = 1').compile(ns)
-      cg.parse('x = 1; y = 1').compile(ns)
-      cg.parse('x = 1; y + 1').compile(ns)
+      assert.doesNotThrow(function () {
+        cg.parse('1 + 2').compile(ns)
+        cg.parse('x = 1').compile(ns)
+        cg.parse('x = 1; y = 1').compile(ns)
+        cg.parse('x = 1; y + 1').compile(ns)
+      })
     })
 
     it('should throw if a method is not defined in the scope or in the ns', function () {
