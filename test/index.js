@@ -124,13 +124,13 @@ describe('math-codegen', function () {
       })
 
       it('should parse an assignment expression', function () {
-        statement(cg.parse('x = 1'), '( scope["x"] = ns.factory(1) )')
+        statement(cg.parse('x = 1'), 'scope["x"] = ns.factory(1)')
       })
 
       it('should parse multiple statements', function () {
         statements(
           cg.parse('sin(1);x = 1'),
-          [id('sin', 'ns.factory(1)'), '( scope["x"] = ns.factory(1) )']
+          [id('sin', 'ns.factory(1)'), 'scope["x"] = ns.factory(1)']
         )
       })
 
@@ -202,13 +202,13 @@ describe('math-codegen', function () {
       })
 
       it('should parse an assignment expression', function () {
-        statement(cg.parse('x = 1'), '( scope["x"] = 1 )')
+        statement(cg.parse('x = 1'), 'scope["x"] = 1')
       })
 
       it('should parse multiple statements', function () {
         statements(
-          cg.parse('sin(1);x = 1'),
-          [id('sin', '1'), '( scope["x"] = 1 )']
+          cg.parse('sin(1); x = 1'),
+          [id('sin', '1'), 'scope["x"] = 1']
         )
       })
     })
@@ -316,6 +316,13 @@ describe('math-codegen', function () {
       var code = cg.parse('1 + x').compile(ns)
       assert(code.eval({ x: 2 }) === 3)
       assert(code.eval({ x: 0 }) === 1)
+    })
+
+    it('should make assignment to the scope', function () {
+      var scope = {x: 2};
+      var code = cg.parse('y = x; 1 + x').compile(ns)
+      assert(code.eval(scope) === 3)
+      assert(scope.y === 2)
     })
 
     it('should throw if a variable is not defined in the scope or the namespace', function () {
