@@ -3,7 +3,7 @@
 [![Build Status][travis-image]][travis-url] 
 [![NPM][npm-image]][npm-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
-[![Stability](https://img.shields.io/badge/stability-unstable-yellow.svg)]()
+[![Stability](https://img.shields.io/badge/stability-stable-green.svg)]()
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
@@ -11,7 +11,7 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+**Table of Contents**  * generated with [DocToc](https://github.com/thlorenz/doctoc) *
 
 - [Description](#description)
   - [Lifecycle](#lifecycle)
@@ -19,6 +19,7 @@
     - [Compile](#compile)
     - [Eval](#eval)
   - [Differences with math.js expression parser](#differences-with-mathjs-expression-parser)
+  - [Operators](#operators)
 - [Install](#install)
 - [Usage](#usage)
 - [API](#api)
@@ -60,8 +61,8 @@ For example let's consider the following expression with the variable `x` which 
 '1 + 2 * x'
 ```
 
-the expression can be emulated with function calls instead of operators (the parser identifies the addition and multiplication
-expression as [Binary Expressions](https://github.com/estree/estree/blob/master/spec.md#binaryexpression))
+the expression can be emulated with function calls instead of operators, math-codegen will map many mathematical
+operators to callable methods
 
 ```javascript
 'add(1, mul(2, x))'
@@ -73,7 +74,7 @@ now we can introduce the namespace `ns` where `add` and `multiply` come from
 'ns.add(1, ns.mul(2, x))'
 ```
 
-the variables (which for the parser are [Identifiers](https://github.com/estree/estree/blob/master/spec.md#identifier))
+the variables (which for the parser are `symbols`
 come from a context called `scope` but they might also be constant values defined in the namespace:
 
 ```javascript
@@ -126,6 +127,49 @@ important facts I've found:
 make any assumptions of the arrays and treats them just like any other literal allowing the namespace to 
 decide what to do with an array in its `factory` method
 
+### Operators
+
+The following operators recognized by `mr-parser` are named as follows when compiled
+
+```javascript
+'+': 'add'
+'-': 'sub'
+'*': 'mul'
+'/': 'div'
+'^': 'pow'
+'%': 'mod'
+'!': 'factorial'
+
+// misc operators
+'|': 'bitwiseOR'
+'^|': 'bitwiseXOR'
+'&': 'bitwiseAND'
+
+'||': 'logicalOR'
+'xor': 'logicalXOR'
+'&&': 'logicalAND'
+
+// comparison
+'<': 'lessThan'
+'>': 'greaterThan'
+'<=': 'lessEqualThan'
+'>=': 'greaterEqualThan'
+'===': 'strictlyEqual'
+'==': 'equal'
+'!==': 'strictlyNotEqual'
+'!=': 'notEqual'
+
+// shift
+'>>': 'shiftRight'
+'<<': 'shiftLeft'
+'>>>': 'unsignedRightShift'
+
+// unary
+'+': 'positive'
+'-': 'negative'
+'~': 'oneComplement'
+```
+
 ## Install
 
 ```sh
@@ -151,8 +195,8 @@ that exist during the instance lifespan
 **params**
 * `options` {Object} Options available for the interpreter
   * `[options.factory="ns.factory"]` {string} factory method under the namespace 
-  * `[options.raw=false]` {boolean} True to interpret BinaryExpression, UnaryExpression and ArrayExpression
-   in a raw way without wrapping the operators with identifiers, e.g. `-1` will be compiled as
+  * `[options.raw=false]` {boolean} True to interpret OperatorNode, UnaryNode and ArrayNode
+   in a raw way without wrapping the operators with identifiers e.g. `-1` will be compiled as
    `-1` instead of `ns.negative(ns.factory(1))`
   * `[options.rawArrayExpressionElements=true]` {boolean} true to interpret the array elements in a raw way
   * `[options.rawCallExpressionElements=false]` {boolean} true to interpret call expression
@@ -197,50 +241,50 @@ the property name in the program
 ### built-in math
 
 ```javascript
+'use strict'
+var CodeGenerator = require('math-codegen')
+
 var numeric = {
-  factory: function (a) {
-    // anything is a number :)
-    return Number(a); 
-  },
-  add: function (a, b) { 
-    return a + b; 
-  },
-  mul: function (a, b) { 
-    return a * b; 
-  }
-};
+  factory: function (a) { return a },
+  add: function (a, b) { return a + b },
+  mul: function (a, b) { return a * b }
+}
 
-var instance = new CodeGenerator()
+// 1 + 2 * 3 = 7
+new CodeGenerator()
   .parse('1 + 2 * x')
-  .compile(numeric);
-
-instance.eval({x : 3});     // 1 + 2 * 3 = 7
+  .compile(numeric)
+  .eval({x: 3})
+)
 ```
 
 ### imaginary
 
 ```javascript
-var instance = new CodeGenerator();
+'use strict'
+var CodeGenerator = require('math-codegen')
 
 var imaginary = {
   factory: function (a) {
     // a = [re, im]
     if (typeof a === 'number') {
-      return [a, 0];
+      return [a, 0]
     }
-    return [a[0] || 0, a[1] || 0];
+    return [a[0] || 0, a[1] || 0]
   },
   add: function (a, b) {
-    var re = a[0] + b[0];
-    var im = a[1] + b[1];
-    return [re, im];
+    var re = a[0] + b[0]
+    var im = a[1] + b[1]
+    return [re, im]
   },
   mul: function (a, b) {
-    var re = a[0] * b[0] - a[1] * b[1];
-    var im = a[0] * b[1] + a[1] * b[0];
-    return [re, im];
+    var re = a[0] * b[0] - a[1] * b[1]
+    var im = a[0] * b[1] + a[1] * b[0]
+    return [re, im]
   }
-};
+}
+
+var instance = new CodeGenerator()
 
 // [1, 0] + [2, 0] * [1, 1]
 // [1, 0] + [2, 2]
@@ -263,33 +307,38 @@ instance
 ### interval arithmetic
 
 ```javascript
+'use strict'
+var CodeGenerator = require('math-codegen')
+
 var interval = {
   factory: function (a) {
     // a = [lo, hi]
     if (typeof a === 'number') {
-      return [a, a];
+      return [a, a]
     }
-    return a;
+    return [a[0], a[1]]
   },
   add: function (x, y) {
-    return [x[0] + y[0], x[1] + y[1]];
+    return [x[0] + y[0], x[1] + y[1]]
   },
   mul: function (x, y) {
-    var ac = x[0] * y[0];
-    var ad = x[0] * y[1];
-    var bc = x[1] * y[0];
-    var bd = x[1] * y[1];
-    return [Math.min(ac, ad, bc, bd), Math.max(ac, ad, bc, bd)];
+    var ac = x[0] * y[0]
+    var ad = x[0] * y[1]
+    var bc = x[1] * y[0]
+    var bd = x[1] * y[1]
+    return [Math.min(ac, ad, bc, bd), Math.max(ac, ad, bc, bd)]
   }
-};
+}
+
+var instance = new CodeGenerator()
 
 // [1, 1] + [2, 2] * [-1, 2]
 // [1, 1] + [-2, 4]
 // [-1, 5]
-var instance = new CodeGenerator()
+instance
   .parse('1 + 2 * x')
   .compile(interval)
-  .eval({x : [-1, 2]});
+  .eval({x: [-1, 2]})
 ```
 
 ## Inspiration projects

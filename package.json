@@ -42,6 +42,6 @@
     "test": "mocha -R spec test/",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
     "start": "npm run test:watch",
-    "toc": "./node_modules/.bin/doctoc ."
+    "toc": "doctoc ."
   }
 }
