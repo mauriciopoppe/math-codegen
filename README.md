@@ -3,7 +3,7 @@
 [![Build Status][travis-image]][travis-url] 
 [![NPM][npm-image]][npm-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
-[![Stability](https://img.shields.io/badge/stability-stable-green.svg)]()
+[![Stability](https://img.shields.io/badge/stability-unstable-yellow.svg)]()
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
@@ -41,8 +41,6 @@
 An interpreter for mathematical expressions which allows the programmer to change the usual semantic of an
 operator bringing the operator overloading polymorphism to JavaScript (emulated with function calls),
 in addition an expression can be evaluated under any adapted namespace providing expression portability between numeric libraries 
-
-NOTE: still a work on progress
 
 ### Lifecycle
 

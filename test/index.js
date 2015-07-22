@@ -315,6 +315,7 @@ describe('math-codegen', function () {
     it('should eval an operation successfully', function () {
       var code = cg.parse('1 + x').compile(ns)
       assert(code.eval({ x: 2 }) === 3)
+      assert(code.eval({ x: 0 }) === 1)
     })
 
     it('should throw if a variable is not defined in the scope or the namespace', function () {
