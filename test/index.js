@@ -242,6 +242,8 @@ describe('math-codegen', function () {
   })
 
   describe('compile', function () {
+    var ns = { factory: function () {} }
+
     beforeEach(function () {
       cg = new CodeGenerator()
     })
@@ -260,22 +262,34 @@ describe('math-codegen', function () {
     })
 
     it('should have a return statement in the eval method', function () {
-      var code = cg.parse('1 + 2').compile({})
+      var code = cg.parse('1 + 2').compile(ns)
       assert(code.eval.toString().indexOf('return ') > 0)
     })
 
     it('should compile correctly under a ns', function () {
-      cg.parse('1 + 2').compile({})
-      cg.parse('x = 1').compile({})
-      cg.parse('x = 1; y = 1').compile({})
-      cg.parse('x = 1; y + 1').compile({})
+      cg.parse('1 + 2').compile(ns)
+      cg.parse('x = 1').compile(ns)
+      cg.parse('x = 1; y = 1').compile(ns)
+      cg.parse('x = 1; y + 1').compile(ns)
     })
 
     it('should throw if a method is not defined in the scope or in the ns', function () {
-      var code = cg.parse('1 + 2').compile({})
+      var code = cg.parse('1 + 2').compile(ns)
       assert.throws(function () {
+        // `add` is not defined
         code.eval()
+      }, /symbol "add" is undefined/)
+    })
+
+    it('should throw if a method is expected to be a function in the scope or in the ns', function () {
+      var code = cg.parse('1 + 2').compile({
+        factory: function (n) { return n },
+        add: 3
       })
+      assert.throws(function () {
+        // `add` is not defined
+        code.eval()
+      }, /symbol "add" must be a function/)
     })
 
     it('should compile addition if .add is in the namespace', function () {
@@ -284,6 +298,39 @@ describe('math-codegen', function () {
         add: function (x, y) { return x + y }
       })
       assert(code.eval() === 3)
+    })
+  })
+
+  describe('eval', function () {
+    var ns = {
+      factory: function (a) { return a },
+      add: function (a, b) { return a + b },
+      mul: function (a, b) { return a * b }
+    }
+
+    beforeEach(function () {
+      cg = new CodeGenerator()
+    })
+
+    it('should eval an operation successfully', function () {
+      var code = cg.parse('1 + x').compile(ns)
+      assert(code.eval({ x: 2 }) === 3)
+    })
+
+    it('should throw if a variable is not defined in the scope or the namespace', function () {
+      var code = cg.parse('1 + x').compile(ns)
+      assert.throws(function () {
+        code.eval({})
+      }, /symbol "x" is undefined/)
+    })
+
+    it('should throw if a function is not defined in the scope or the namespace', function () {
+      var code = cg.parse('1 + x(1)').compile(ns)
+      assert.throws(function () {
+        code.eval({
+          x: 3
+        })
+      }, /symbol "x" must be a function/)
     })
   })
 })
