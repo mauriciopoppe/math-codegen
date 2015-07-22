@@ -1,11 +1,11 @@
 # math-codegen 
 
-[![NPM][npm-image]][npm-url]
-
 [![Build Status][travis-image]][travis-url] 
+[![NPM][npm-image]][npm-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
-[![Dependency Status][david-image]][david-url] 
 [![Stability](https://img.shields.io/badge/stability-unstable-yellow.svg)]()
+
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 > Generates JavaScript code from mathematical expressions
 
@@ -35,8 +35,6 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-
 ## Description
 
 An interpreter for mathematical expressions which allows the programmer to change the usual semantic of an
@@ -48,15 +46,15 @@ NOTE: still a work on progress
 ### Lifecycle
 
 - `parse`: a mathematical expression is parsed with [`mr-parse`](https://github.com/maurizzzio/mr-parser), in the ideal scenario
-it would use [math.js expression parser](http://mathjs.org/docs/expressions/index.html), however it's not modularized yet
+it would use [math.js expression parser](http://mathjs.org/docs/expressions/index.html) however it's not modularized yet
 and including all math.js is just an overkill, probably `mr-parse` will be replaced with math.js expression parser when
-it reaches npm in a module :)
+it reaches npm as a module :)
 - `compile`: the parsed string is compiled against a namespace producing executable JavaScript code
 - `eval`: the executable JavaScript code is evaluated against a context
 
 #### Parse
 
-For example let's consider the following expression with the variable `x` which is user defined:
+For example let's consider the following expression with the variable `x` which is defined by the user:
 
 ```javascript
 '1 + 2 * x'
@@ -98,15 +96,17 @@ executable JavaScript code
 parse('1 + 2 * x').compile(namespace)
 
 // returns something like this
-(function (ns) {
+(function (definitions) {
+  var ns = definitions.namespace
   return {
     eval: function (scope) {
       // scope processing
       // ...
       // the string parsed above goes here
+      return ns.add(ns.factory(1), ns.mul(ns.factory(2), (scope["x"] || ns["x"]) ))
     }
   }
-})(namespace)
+})(definitions)   // definitions created by math-codegen    
 ```
 
 #### Eval
@@ -122,9 +122,6 @@ parse('1 + 2 * x').compile(namespace).eval(scope)
 Math.js expression parser API is quite similar having the same lifecycle however there are some
 important facts I've found:
 
-- `math.js` has a custom expression parser (which means it has additional types of nodes),
-`math-codegen` uses Esprima which support the ES5 grammar only
-[(ESTree AST nodes)](https://github.com/estree/estree/blob/master/spec.md)
 - `math.js` v1.x arrays can represent matrices with `ns.matrix` or as a raw arrays, `math-codegen` doesn't
 make any assumptions of the arrays and treats them just like any other literal allowing the namespace to 
 decide what to do with an array in its `factory` method
@@ -167,32 +164,10 @@ that exist during the instance lifespan
 **params**
 * `code` {string} string to be parsed
  
-Parses a program using [Esprima](http://esprima.org/), each Expression Statement is saved in
+Parses a program using [`mr-parse`](https://github.com/maurizzzio/mr-parser), each Expression Statement is saved in
 `instance.statements`
 
-Node types implemented:
-
-- Nodes:
-  - [ExpressionStatement](https://github.com/estree/estree/blob/master/spec.md#expressionstatement)
-- Expressions:
-  - [ArrayExpression](https://github.com/estree/estree/blob/master/spec.md#arrayexpression)
-  - [UnaryExpression](https://github.com/estree/estree/blob/master/spec.md#unaryexpression)
-  available operators emulated with function calls can be found 
-  [here](https://github.com/maurizzzio/math-codegen/blob/master/lib/misc/UnaryOperator.js)
-  - [BinaryExpression](https://github.com/estree/estree/blob/master/spec.md#binaryexpression)
-  available operators emulated with function calls can be found 
-  [here](https://github.com/maurizzzio/math-codegen/blob/master/lib/misc/BinaryOperator.js)  
-  - [AssignmentExpression](https://github.com/estree/estree/blob/master/spec.md#assignmentexpression)
-  - [ConditionalExpression](https://github.com/estree/estree/blob/master/spec.md#conditionalexpression)
-  - [CallExpression](https://github.com/estree/estree/blob/master/spec.md#callexpression)
-- Misc:
-  - [Identifiers](https://github.com/estree/estree/blob/master/spec.md#identifier), identifier
-  resolution follows this order:
-    - namespace
-    - scope
-    - definitions stored in `instance.defs`
-   
-  - [Literals](https://github.com/estree/estree/blob/master/spec.md#literal)
+The documentation for the available nodes is described in [`mr-parse`](https://github.com/maurizzzio/mr-parser) 
   
 ### `instance.compile(namespace)`
   
@@ -200,9 +175,11 @@ Node types implemented:
 **params**
 * `namespace` {Object}
 
-Compiles the code making `namespace`'s properties available during evaluation
+Compiles the code making `namespace`'s properties available during evaluation, **it's required
+to have the `factory` property defined**
  
 **returns** {Object}
+* `return.code` {string} the body of the function to be evaluated with `eval`
 * `return.eval` {Function} Function to be evaluated under a context
  **params**
   * `scope` {Object}
@@ -318,16 +295,15 @@ var instance = new CodeGenerator()
 ## Inspiration projects
 
 - [math.js expression parser](http://mathjs.org/docs/expressions/index.html)
+- [angular v1.x parser](https://github.com/angular/angular.js/blob/master/src/ng/parse.js)
 
 ## License
 
 2015 MIT © [Mauricio Poppe]()
 
-[npm-image]: https://nodei.co/npm/math-codegen.png?downloads=true
+[npm-image]: https://img.shields.io/npm/v/math-codegen.svg?style=flat
 [npm-url]: https://npmjs.org/package/math-codegen
 [travis-image]: https://travis-ci.org/maurizzzio/math-codegen.svg?branch=master
 [travis-url]: https://travis-ci.org/maurizzzio/math-codegen
 [coveralls-image]: https://coveralls.io/repos/maurizzzio/math-codegen/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/r/maurizzzio/math-codegen?branch=master
-[david-image]: https://david-dm.org/maurizzzio/math-codegen.svg
-[david-url]: https://david-dm.org/maurizzzio/math-codegen
