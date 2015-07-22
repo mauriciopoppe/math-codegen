@@ -334,7 +334,7 @@ describe('math-codegen', function () {
     })
 
     it('should make assignment to the scope', function () {
-      var scope = {x: 2};
+      var scope = {x: 2}
       var code = cg.parse('y = x; 1 + x').compile(ns)
       assert(code.eval(scope) === 3)
       assert(scope.y === 2)
