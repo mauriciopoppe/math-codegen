@@ -35,9 +35,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
 ## Description
 
-A flexible interpreter for mathematical expressions which allows the programmer to change the usual semantic of an
+An interpreter for mathematical expressions which allows the programmer to change the usual semantic of an
 operator bringing the operator overloading polymorphism to JavaScript (emulated with function calls),
 in addition an expression can be evaluated under any adapted namespace providing expression portability between numeric libraries 
 
@@ -45,9 +47,12 @@ NOTE: still a work on progress
 
 ### Lifecycle
 
-- `parse` a mathematical expression is parsed with [Esprima](http://esprima.org/)
-- `compile` the parsed string is compiled against a namespace producing executable JavaScript code
-- `eval` the executable JavaScript code is evaluated against a context
+- `parse`: a mathematical expression is parsed with [`mr-parse`](https://github.com/maurizzzio/mr-parser), in the ideal scenario
+it would use [math.js expression parser](http://mathjs.org/docs/expressions/index.html), however it's not modularized yet
+and including all math.js is just an overkill, probably `mr-parse` will be replaced with math.js expression parser when
+it reaches npm in a module :)
+- `compile`: the parsed string is compiled against a namespace producing executable JavaScript code
+- `eval`: the executable JavaScript code is evaluated against a context
 
 #### Parse
 
@@ -61,27 +66,27 @@ the expression can be emulated with function calls instead of operators (the par
 expression as [Binary Expressions](https://github.com/estree/estree/blob/master/spec.md#binaryexpression))
 
 ```javascript
-'add(1, multiply(2, x))'
+'add(1, mul(2, x))'
 ```
 
 now we can introduce the namespace `ns` where `add` and `multiply` come from
 
 ```javascript
-'ns.add(1, ns.multiply(2, x))'
+'ns.add(1, ns.mul(2, x))'
 ```
 
 the variables (which for the parser are [Identifiers](https://github.com/estree/estree/blob/master/spec.md#identifier))
 come from a context called `scope` but they might also be constant values defined in the namespace:
 
 ```javascript
-'ns.add(1, ns.multiply(2, (scope["x"] || ns["x"]) ))'
+'ns.add(1, ns.mul(2, (scope["x"] || ns["x"]) ))'
 ```
 
 the constant values might have different meanings for different namespaces therefore a `factory` is needed
 on the namespace to transform these values into values the namespace can operate with
 
 ```javascript
-'ns.add(ns.factory(1), ns.multiply(ns.factory(2), (scope["x"] || ns["x"]) ))'
+'ns.add(ns.factory(1), ns.mul(ns.factory(2), (scope["x"] || ns["x"]) ))'
 ```
 
 #### Compile
