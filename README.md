@@ -2,7 +2,7 @@
 
 [![Build Status][travis-image]][travis-url]
 [![NPM][npm-image]][npm-url]
-[![Coverage Status][coveralls-image]][coveralls-url]
+[![codecov](https://codecov.io/gh/mauriciopoppe/math-codegen/branch/master/graph/badge.svg)](https://codecov.io/gh/mauriciopoppe/math-codegen)
 [![Stability](https://img.shields.io/badge/stability-unstable-yellow.svg)]()
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
@@ -44,7 +44,7 @@ in addition an expression can be evaluated under any adapted namespace providing
 
 ### Lifecycle
 
-- `parse`: a mathematical expression is parsed with [`mr-parse`](https://github.com/maurizzzio/mr-parser), in the ideal scenario
+- `parse`: a mathematical expression is parsed with [`mr-parse`](https://github.com/mauriciopoppe/mr-parser), in the ideal scenario
 it would use [math.js expression parser](http://mathjs.org/docs/expressions/index.html) however it's not modularized yet
 and including all math.js is just an overkill, probably `mr-parse` will be replaced with math.js expression parser when
 it reaches npm as a module :)
@@ -206,10 +206,10 @@ that exist during the instance lifespan
 **params**
 * `code` {string} string to be parsed
 
-Parses a program using [`mr-parse`](https://github.com/maurizzzio/mr-parser), each Expression Statement is saved in
+Parses a program using [`mr-parse`](https://github.com/mauriciopoppe/mr-parser), each Expression Statement is saved in
 `instance.statements`
 
-The documentation for the available nodes is described in [`mr-parse`](https://github.com/maurizzzio/mr-parser)
+The documentation for the available nodes is described in [`mr-parse`](https://github.com/mauriciopoppe/mr-parser)
 
 ### `instance.compile(namespace)`
 
@@ -350,7 +350,5 @@ instance
 
 [npm-image]: https://img.shields.io/npm/v/math-codegen.svg?style=flat
 [npm-url]: https://npmjs.org/package/math-codegen
-[travis-image]: https://travis-ci.org/maurizzzio/math-codegen.svg?branch=master
-[travis-url]: https://travis-ci.org/maurizzzio/math-codegen
-[coveralls-image]: https://coveralls.io/repos/maurizzzio/math-codegen/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/r/maurizzzio/math-codegen?branch=master
+[travis-image]: https://travis-ci.org/mauriciopoppe/math-codegen.svg?branch=master
+[travis-url]: https://travis-ci.org/mauriciopoppe/math-codegen
