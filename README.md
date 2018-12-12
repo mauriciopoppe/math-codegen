@@ -1,6 +1,6 @@
-# math-codegen 
+# math-codegen
 
-[![Build Status][travis-image]][travis-url] 
+[![Build Status][travis-image]][travis-url]
 [![NPM][npm-image]][npm-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![Stability](https://img.shields.io/badge/stability-unstable-yellow.svg)]()
@@ -40,7 +40,7 @@
 
 An interpreter for mathematical expressions which allows the programmer to change the usual semantic of an
 operator bringing the operator overloading polymorphism to JavaScript (emulated with function calls),
-in addition an expression can be evaluated under any adapted namespace providing expression portability between numeric libraries 
+in addition an expression can be evaluated under any adapted namespace providing expression portability between numeric libraries
 
 ### Lifecycle
 
@@ -90,7 +90,7 @@ on the namespace to transform these values into values the namespace can operate
 
 Now that we have a parsed expression we have to compile it against a namespace to produce
 executable JavaScript code
- 
+
 ```javascript
 parse('1 + 2 * x').compile(namespace)
 
@@ -105,7 +105,7 @@ parse('1 + 2 * x').compile(namespace)
       return ns.add(ns.factory(1), ns.mul(ns.factory(2), (scope["x"] || ns["x"]) ))
     }
   }
-})(definitions)   // definitions created by math-codegen    
+})(definitions)   // definitions created by math-codegen
 ```
 
 #### Eval
@@ -122,7 +122,7 @@ Math.js expression parser API is quite similar having the same lifecycle however
 important facts I've found:
 
 - `math.js` v1.x arrays can represent matrices with `ns.matrix` or as a raw arrays, `math-codegen` doesn't
-make any assumptions of the arrays and treats them just like any other literal allowing the namespace to 
+make any assumptions of the arrays and treats them just like any other literal allowing the namespace to
 decide what to do with an array in its `factory` method
 
 ### Operators
@@ -189,37 +189,37 @@ new CodeGenerator([options]).parse(code).compile(namespace).eval(scope)
 * `interpreter` {Interpreter} Instance of the Interpreter class
 * `defs` {Object} An object with additional definitions available during the compilation
 that exist during the instance lifespan
- 
+
 **params**
 * `options` {Object} Options available for the interpreter
-  * `[options.factory="ns.factory"]` {string} factory method under the namespace 
+  * `[options.factory="ns.factory"]` {string} factory method under the namespace
   * `[options.raw=false]` {boolean} True to interpret OperatorNode, UnaryNode and ArrayNode
    in a raw way without wrapping the operators with identifiers e.g. `-1` will be compiled as
    `-1` instead of `ns.negative(ns.factory(1))`
   * `[options.rawArrayExpressionElements=true]` {boolean} true to interpret the array elements in a raw way
   * `[options.rawCallExpressionElements=false]` {boolean} true to interpret call expression
-   elements in a raw way
+  * `[options.applyFactoryToScope=false]` {boolean} true to apply the factory function on non-function values of the scope/namespace
 
 ### `instance.parse(code)`
 
 **chainable**
 **params**
 * `code` {string} string to be parsed
- 
+
 Parses a program using [`mr-parse`](https://github.com/maurizzzio/mr-parser), each Expression Statement is saved in
 `instance.statements`
 
-The documentation for the available nodes is described in [`mr-parse`](https://github.com/maurizzzio/mr-parser) 
-  
+The documentation for the available nodes is described in [`mr-parse`](https://github.com/maurizzzio/mr-parser)
+
 ### `instance.compile(namespace)`
-  
+
 **chainable**
 **params**
 * `namespace` {Object}
 
 Compiles the code making `namespace`'s properties available during evaluation, **it's required
 to have the `factory` property defined**
- 
+
 **returns** {Object}
 * `return.code` {string} the body of the function to be evaluated with `eval`
 * `return.eval` {Function} Function to be evaluated under a context

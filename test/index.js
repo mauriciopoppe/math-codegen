@@ -355,5 +355,29 @@ describe('math-codegen', function () {
         })
       }, /symbol "x" must be a function/)
     })
+
+    it('should call the factory on context values', function () {
+      function Decimal (v) {
+        this.v = v
+      }
+      var decimalNamespace = {
+        factory: function (v) {
+          if (typeof v === Decimal) return v
+          return new Decimal(v)
+        },
+        add: function (a, b) {
+          return a.v + b.v
+        }
+      }
+      const codeGenerator = new CodeGenerator({
+        applyFactoryToScope: true
+      })
+      var code = codeGenerator.parse('x + y')
+        .compile(decimalNamespace)
+      assert(code.eval({
+        x: 1,
+        y: 2
+      }) === 3)
+    })
   })
 })
