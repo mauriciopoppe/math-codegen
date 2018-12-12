@@ -1,5 +1,7 @@
 language: node_js
-env: CI=true
+env:
+  - CI=true
+  - CODECOV_TOKEN="6ca53821-af00-45ac-8eb7-67421468f68a"
 sudo: false
 
 node_js:
@@ -7,7 +9,9 @@ node_js:
 
 install:
   - npm install
+  - npm install -g codecov
 
 script:
   - npm run lint
-  - npm run istanbul && cat ./coverage/lcov.info | coveralls
+  - npm run istanbul
+  - codecov
