@@ -357,7 +357,7 @@ describe('math-codegen', function () {
     })
 
     it('should call the factory on context values', function () {
-      function Decimal(v) {
+      function Decimal (v) {
         this.v = v
       }
       var decimalNamespace = {
