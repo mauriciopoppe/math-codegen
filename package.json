@@ -24,7 +24,7 @@
     "parse"
   ],
   "dependencies": {
-    "extend": "^3.0.0",
+    "extend": "^3.0.2",
     "mr-parser": "^0.2.1"
   },
   "devDependencies": {
