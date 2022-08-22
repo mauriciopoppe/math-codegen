@@ -30,14 +30,13 @@
   "devDependencies": {
     "coveralls": "2.11.4",
     "doctoc": "0.14.2",
-    "istanbul": "0.3.21",
     "mocha": "2.3.3",
-    "mocha-lcov-reporter": "0.0.2",
     "nodemon": "1.7.1",
+    "nyc": "^15.1.0",
     "standard": "4.5.4"
   },
   "scripts": {
-    "istanbul": "istanbul cover _mocha --report lcovonly -- -R spec test/",
+    "coverage": "nyc npm run test",
     "lint": "standard",
     "test": "mocha -R spec test/",
     "test:watch": "nodemon --watch lib --watch test --watch index.js --exec 'npm test'",
