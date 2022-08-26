@@ -2,7 +2,7 @@
   "name": "math-codegen",
   "version": "0.4.0",
   "description": "Generates code from mathematical expressions",
-  "bugs": "https://github.com/maurizzzio/math-codegen/issues",
+  "bugs": "https://github.com/mauricopoppe/math-codegen/issues",
   "license": "MIT",
   "main": "index.js",
   "author": "Mauricio Poppe <mauricio.poppe@gmail.com>",
@@ -24,16 +24,16 @@
     "parse"
   ],
   "dependencies": {
-    "extend": "3.0.0",
-    "mr-parser": "0.2.1"
+    "extend": "^3.0.2",
+    "mr-parser": "^0.2.1"
   },
   "devDependencies": {
-    "coveralls": "2.11.4",
-    "doctoc": "0.14.2",
-    "mocha": "2.3.3",
-    "nodemon": "1.7.1",
-    "nyc": "^15.1.0",
-    "standard": "4.5.4"
+    "coveralls": "^2.11.4",
+    "doctoc": "^0.14.2",
+    "mocha": "^2.3.3",
+    "nodemon": "^1.7.1",
+    "standard": "^4.5.4",
+    "nyc": "^15.1.0"
   },
   "scripts": {
     "coverage": "nyc npm run test",
