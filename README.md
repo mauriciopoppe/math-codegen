@@ -3,7 +3,6 @@
 [![Build Status][travis-image]][travis-url]
 [![NPM][npm-image]][npm-url]
 [![codecov](https://codecov.io/gh/mauriciopoppe/math-codegen/branch/master/graph/badge.svg)](https://codecov.io/gh/mauriciopoppe/math-codegen)
-[![Stability](https://img.shields.io/badge/stability-unstable-yellow.svg)]()
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
@@ -346,9 +345,7 @@ instance
 
 ## License
 
-2015 MIT © [Mauricio Poppe]()
+MIT
 
 [npm-image]: https://img.shields.io/npm/v/math-codegen.svg?style=flat
 [npm-url]: https://npmjs.org/package/math-codegen
-[travis-image]: https://travis-ci.org/mauriciopoppe/math-codegen.svg?branch=master
-[travis-url]: https://travis-ci.org/mauriciopoppe/math-codegen
