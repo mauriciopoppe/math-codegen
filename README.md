@@ -1,6 +1,5 @@
 # math-codegen
 
-[![Build Status][travis-image]][travis-url]
 [![NPM][npm-image]][npm-url]
 [![codecov](https://codecov.io/gh/mauriciopoppe/math-codegen/branch/master/graph/badge.svg)](https://codecov.io/gh/mauriciopoppe/math-codegen)
 
