@@ -1,7 +1,7 @@
 'use strict'
-var CodeGenerator = require('../')
+const CodeGenerator = require('../')
 
-var numeric = {
+const numeric = {
   factory: function (a) { return a },
   add: function (a, b) { return a + b },
   mul: function (a, b) { return a * b }
@@ -12,5 +12,5 @@ console.log(
   new CodeGenerator()
     .parse('1 + 2 * x')
     .compile(numeric)
-    .eval({x: 3})
+    .eval({ x: 3 })
 )

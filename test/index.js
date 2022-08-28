@@ -1,12 +1,12 @@
 'use strict'
 
-var assert = require('assert')
-var CodeGenerator = require('../')
-var mocha = require('mocha')
-var it = mocha.it
-var describe = mocha.describe
-var beforeEach = mocha.beforeEach
-var SymbolNode = require('../lib/node/SymbolNode')
+const assert = require('assert')
+const CodeGenerator = require('../')
+const mocha = require('mocha')
+const it = mocha.it
+const describe = mocha.describe
+const beforeEach = mocha.beforeEach
+const SymbolNode = require('../lib/node/SymbolNode')
 
 function cleanAssert (a, b) {
   a = a.replace(/\s/g, '')
@@ -22,17 +22,17 @@ function statement (instance, test) {
 }
 
 function statements (instance, tests) {
-  var statements = instance.statements
-  for (var i = 0; i < statements.length; i += 1) {
+  const statements = instance.statements
+  for (let i = 0; i < statements.length; i += 1) {
     cleanAssert(statements[i], tests[i])
   }
 }
 
 function id (name) {
-  var args = Array.prototype.slice.call(arguments, 1)
+  const args = Array.prototype.slice.call(arguments, 1)
   /* eslint-disable new-cap */
-  var identifier = SymbolNode({
-    name: name
+  let identifier = SymbolNode({
+    name
   })
   /* eslint-enable new-cap */
   if (args.length) {
@@ -44,7 +44,7 @@ function id (name) {
 }
 
 describe('math-codegen', function () {
-  var cg
+  let cg
 
   describe('definitions', function () {
     beforeEach(function () {
@@ -52,15 +52,15 @@ describe('math-codegen', function () {
     })
 
     it('should be sent to the constructor', function () {
-      cg = new CodeGenerator(null, {ns: 1})
+      cg = new CodeGenerator(null, { ns: 1 })
       assert(cg.defs.ns === 1)
     })
 
     it('should be updated', function () {
-      cg.setDefs({ns: 1})
+      cg.setDefs({ ns: 1 })
       assert(cg.defs.ns === 1)
 
-      cg.setDefs({ns: null})
+      cg.setDefs({ ns: null })
       assert(!cg.defs.ns)
     })
   })
@@ -238,11 +238,10 @@ describe('math-codegen', function () {
         statement(cg.parse('sin(1, 2)'), id('sin', '1', '2'))
       })
     })
-
   })
 
   describe('compile', function () {
-    var ns = { factory: function () {} }
+    const ns = { factory: function () {} }
 
     beforeEach(function () {
       cg = new CodeGenerator()
@@ -259,7 +258,7 @@ describe('math-codegen', function () {
     })
 
     it('should compile successfully when the namespace is a object/function', function () {
-      var fn = function () { }
+      const fn = function () { }
       fn.factory = function (a) { return a }
       fn.add = function (a, b) { return a + b }
       assert.doesNotThrow(function () {
@@ -275,7 +274,7 @@ describe('math-codegen', function () {
     })
 
     it('should have a return statement in the eval method', function () {
-      var code = cg.parse('1 + 2').compile(ns)
+      const code = cg.parse('1 + 2').compile(ns)
       assert(code.eval.toString().indexOf('return ') > 0)
     })
 
@@ -289,7 +288,7 @@ describe('math-codegen', function () {
     })
 
     it('should throw if a method is not defined in the scope or in the ns', function () {
-      var code = cg.parse('1 + 2').compile(ns)
+      const code = cg.parse('1 + 2').compile(ns)
       assert.throws(function () {
         // `add` is not defined
         code.eval()
@@ -297,7 +296,7 @@ describe('math-codegen', function () {
     })
 
     it('should throw if a method is expected to be a function in the scope or in the ns', function () {
-      var code = cg.parse('1 + 2').compile({
+      const code = cg.parse('1 + 2').compile({
         factory: function (n) { return n },
         add: 3
       })
@@ -308,7 +307,7 @@ describe('math-codegen', function () {
     })
 
     it('should compile addition if .add is in the namespace', function () {
-      var code = cg.parse('1 + 2').compile({
+      const code = cg.parse('1 + 2').compile({
         factory: function (n) { return n },
         add: function (x, y) { return x + y }
       })
@@ -317,7 +316,7 @@ describe('math-codegen', function () {
   })
 
   describe('eval', function () {
-    var ns = {
+    const ns = {
       factory: function (a) { return a },
       add: function (a, b) { return a + b },
       mul: function (a, b) { return a * b }
@@ -328,27 +327,27 @@ describe('math-codegen', function () {
     })
 
     it('should eval an operation successfully', function () {
-      var code = cg.parse('1 + x').compile(ns)
+      const code = cg.parse('1 + x').compile(ns)
       assert(code.eval({ x: 2 }) === 3)
       assert(code.eval({ x: 0 }) === 1)
     })
 
     it('should make assignment to the scope', function () {
-      var scope = {x: 2}
-      var code = cg.parse('y = x; 1 + x').compile(ns)
+      const scope = { x: 2 }
+      const code = cg.parse('y = x; 1 + x').compile(ns)
       assert(code.eval(scope) === 3)
       assert(scope.y === 2)
     })
 
     it('should throw if a variable is not defined in the scope or the namespace', function () {
-      var code = cg.parse('1 + x').compile(ns)
+      const code = cg.parse('1 + x').compile(ns)
       assert.throws(function () {
         code.eval({})
       }, /symbol "x" is undefined/)
     })
 
     it('should throw if a function is not defined in the scope or the namespace', function () {
-      var code = cg.parse('1 + x(1)').compile(ns)
+      const code = cg.parse('1 + x(1)').compile(ns)
       assert.throws(function () {
         code.eval({
           x: 3
@@ -360,9 +359,9 @@ describe('math-codegen', function () {
       function Decimal (v) {
         this.v = v
       }
-      var decimalNamespace = {
+      const decimalNamespace = {
         factory: function (v) {
-          if (typeof v === Decimal) return v
+          if (v instanceof Decimal) return v
           return new Decimal(v)
         },
         add: function (a, b) {
@@ -372,7 +371,7 @@ describe('math-codegen', function () {
       const codeGenerator = new CodeGenerator({
         applyFactoryToScope: true
       })
-      var code = codeGenerator.parse('x + y')
+      const code = codeGenerator.parse('x + y')
         .compile(decimalNamespace)
       assert(code.eval({
         x: 1,
