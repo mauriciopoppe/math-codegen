@@ -5,7 +5,7 @@
   "bugs": "https://github.com/mauricopoppe/math-codegen/issues",
   "license": "MIT",
   "main": "index.js",
-  "author": "Mauricio Poppe <mauricio.poppe@gmail.com>",
+  "author": "Mauricio Poppe",
   "files": [
     "index.js",
     "lib",
