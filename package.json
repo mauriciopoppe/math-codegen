@@ -5,15 +5,17 @@
   "bugs": "https://github.com/mauricopoppe/math-codegen/issues",
   "license": "MIT",
   "main": "index.js",
-  "author": "Mauricio Poppe",
+  "author": "Mauricio Poppe (https://mauriciopoppe.com)",
   "files": [
     "index.js",
+    "package.json",
+    "package-lock.json",
     "lib",
     "LICENSE"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/maurizzzio/math-codegen"
+    "url": "https://github.com/mauriciopoppe/math-codegen"
   },
   "keywords": [
     "math-codegen",
